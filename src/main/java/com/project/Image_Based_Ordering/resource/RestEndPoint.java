@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -16,11 +17,11 @@ public class RestEndPoint {
 ArrayList<Predictions> predictions;
 
     @PostMapping("/getRestaurants")
-    public String all(@RequestParam("file") MultipartFile image){
+    public String all(@RequestParam("file") MultipartFile image) throws IOException {
 
         PredictionModel predictionModel=new PredictionModel();
         ZomatoModel zomatoModel=new ZomatoModel();
-        predictions=predictionModel.predict(image);
+        predictions=predictionModel.predict(image.getBytes());
         ArrayList<Restaurant> restaurants=zomatoModel.fetchRestaurants(predictions);
 
      return restaurants.toString();
