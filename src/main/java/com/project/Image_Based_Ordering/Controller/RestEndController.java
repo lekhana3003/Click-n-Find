@@ -37,9 +37,9 @@ public class RestEndController {
 
 
     @PostMapping("/getRestaurants")
-    public String all(@RequestParam("file") MultipartFile image) throws IOException {
+    public String all(@RequestParam("image") MultipartFile image,@RequestParam("lat") Double lat,@RequestParam("lon") Double lon) throws IOException {
         predictions=predictionServiceImpl.predict(image.getBytes());
-        ArrayList<Restaurant> restaurants=zomatoServiceImpl.fetchRestaurants(new ZomatoRequest(predictions,entity_type,Integer.parseInt(entity_id)));
+        ArrayList<Restaurant> restaurants=zomatoServiceImpl.fetchRestaurants(new ZomatoRequest(predictions,lat,lon));
      return restaurants.toString();
 
     }

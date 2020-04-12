@@ -42,7 +42,7 @@ String predictionsLimit;
                 else
                 {
                     //Change when laitude and longitude are implemented
-                   restaurantsList = callZomatoAPI(predictionsIterator.next().getName(), zomatoRequest.getEntity_id(), zomatoRequest.getEntity_type());
+                   restaurantsList = callZomatoAPI(predictionsIterator.next().getName(), zomatoRequest.getLat(),zomatoRequest.getLon());
                 }
                 Iterator<Restaurant> restaurantIterator=restaurantsList.iterator();
                while (restaurantIterator.hasNext()) {
@@ -80,5 +80,25 @@ String predictionsLimit;
 
         return resp.getBody().getRestaurantsObjects();
 
+    }
+    @Override
+    public ArrayList<Restaurant> callZomatoAPI(String foodName,Double lat,Double lon)
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("user-key", ZomatoKey);
+        HttpEntity entity = new HttpEntity(headers);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(ZomatoURL)
+                .queryParam("lat", lat)
+                .queryParam("lon",lon)
+                .queryParam("q",foodName);
+
+        HttpEntity<Search> resp = restTemplate.exchange(
+                builder.toUriString(),
+                HttpMethod.GET,
+                entity,
+                Search.class);
+
+        return resp.getBody().getRestaurantsObjects();
     }
 }
